@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Stopwatch</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="stopwatch"> 
+        <span id="time">00:00:00</span>
+        <button id="startStop">Start</button>
+        <button id="reset">Reset</button>
+    </div>
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+
+        function timeToString(time) {
+            let diffInHrs = time / 3600000;
+            let hh = Math.floor(diffInHrs);
+
+            let diffInMin = (diffInHrs - hh) * 60;
+            let mm = Math.floor(diffInMin);
+
+            let diffInSec = (diffInMin - mm) * 60;
+            let ss = Math.floor(diffInSec);
+
+            let formattedMM = mm.toString().padStart(2, "0");
+            let formattedSS = ss.toString().padStart(2, "0");
+            let formattedHH = hh.toString().padStart(2, "0");
+
+            return `${formattedHH}:${formattedMM}:${formattedSS}`;
+        }
+
+        function print(txt) {
+            document.getElementById("time").innerHTML = txt;
+        }
+
+        function start() {
+            startTime = Date.now() - elapsedTime;
+            timerInterval = setInterval(function printTime() {
+                elapsedTime = Date.now() - startTime;
+                print(timeToString(elapsedTime));
+            }, 1000);
+            document.getElementById("startStop").innerHTML = "Pause";
+        }
+
+        function pause() {
+            clearInterval(timerInterval);
+            document.getElementById("startStop").innerHTML = "Start";
+        }
+
+        function reset() {
+            clearInterval(timerInterval);
+            print("00:00:00");
+            elapsedTime = 0;
+            document.getElementById("startStop").innerHTML = "Start";
+        }
+
+        document.getElementById("startStop").addEventListener("click", function () {
+            if (this.innerHTML === "Start") {
+                start();
+            } else {
+                pause();
+            }
+        });
+
+        document.getElementById("reset").addEventListener("click", function () {
+            reset();
+        });
+</script>
+</body>
+</html>
+</html>
